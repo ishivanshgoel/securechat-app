@@ -1,26 +1,25 @@
 const express = require('express')
 const app = express()
-const http = require('http')
-const socketio = require('socket.io')
-const chatHandler = require('./app/socket/chatHandler')
 const connection = require('./app/config/db')
 require('dotenv').config()
+
+// controllers and middlewares
+const auth = require('./app/http/controllers/auth.controller')
+const chat = require('./app/http/controllers/chat.controller')
+const chatHandler = require('./app/socket/chatHandler')
+
 
 // database connection
 connection()
 
-const server = http.createServer(app)
-const io = socketio(server)
-
 // global middlewares
 app.use(express.json())
-app.set('io', io)
 
 
-// controllers and middlewares
-const auth = require('./app/http/controllers/auth.controller')
-
+// app routes
 app.use('/auth', auth)
+app.use('/chat', chat)
+
 
 // error handler
 app.use((err, req, res, next)=>{
@@ -33,23 +32,34 @@ app.use((err, req, res, next)=>{
 })
 
 const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Listening at http://localhost:${PORT}`)
+})
+
+const io = require('socket.io')(server, {
+    cors: {
+      origin: '*',
+    }
 })
 
 // socket io
 // map users to socket id's
+// use redis instead
 let activeConnections = {}
 
 const onConnection = (socket) => {
+    console.log("Socket connection up..")
 
-    socket.on("register", ({userId})=>{
-        activeConnections[socket.id] = userId
+    socket.on("register", (data)=>{
+        console.log("Data Received ", data)
+        data = JSON.parse(data)
+        activeConnections[data.userId] = socket.id
         console.log('New User Connected..', activeConnections)
     })
 
     // chat handler
-    chatHandler(io, socket, activeConnections);
+    chatHandler(io, socket, activeConnections)
+
 }
 
 io.on("connection", onConnection)
