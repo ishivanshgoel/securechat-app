@@ -5,7 +5,8 @@ const chat = express.Router()
 chat.get('/chatlist', async (req, res, next) => {
     try {
 
-        const { userId } = req.body
+        const { userId }  = req.query
+
         if (!userId) throw new Error('Bad Request!!')
 
         let messages = await Message.distinct('to', { from: userId }).exec()
