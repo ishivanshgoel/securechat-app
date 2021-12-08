@@ -1,4 +1,5 @@
 const Message = require('../../models/message')
+const Key = require('../../models/key')
 const express = require('express')
 const chat = express.Router()
 
@@ -24,7 +25,7 @@ chat.get('/chatlist', async (req, res, next) => {
 chat.get('/chatMessages', async (req, res, next) => {
     try {
 
-        const { userId, friendId } = req.body
+        const { userId, friendId } = req.query
 
         if (!userId || !friendId) throw new Error('Bad Request!!')
 

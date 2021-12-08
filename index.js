@@ -15,6 +15,11 @@ connection()
 // global middlewares
 app.use(express.json())
 
+app.use((req, res, next)=>{
+    console.log(`PATH: ${req.path}`)
+    next()
+})
+
 
 // app routes
 app.use('/auth', auth)
@@ -52,7 +57,6 @@ const onConnection = (socket) => {
 
     socket.on("register", (data)=>{
         console.log("Data Received ", data)
-        data = JSON.parse(data)
         activeConnections[data.userId] = socket.id
         console.log('New User Connected..', activeConnections)
     })

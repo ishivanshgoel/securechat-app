@@ -7,9 +7,6 @@ function chatHandler(io, socket, activeConnections){
         // active connections
         console.log("Active Connections ", activeConnections)
 
-        // save message to databse and send to receiver
-        data = JSON.parse(data)
-
         console.log("New Chat Message")
         console.log(`From: ${data.from} To ${data.to} Message ${data.message}`)
 
