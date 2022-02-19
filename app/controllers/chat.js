@@ -72,6 +72,37 @@ class Chat {
       };
     }
   }
+
+  /**
+   * @property {Function} saveMessage - save a new message
+   * @returns success message and error object otherwise
+   */
+
+  static async saveNewMessage(from, to, message) {
+    try {
+      // save to database
+      let mess = new Message({
+        from: from,
+        to: to,
+        message: message,
+      });
+
+      await mess.save();
+
+      return {
+        message: "success",
+        error: false,
+        code: 200,
+      };
+    } catch (err) {
+      logger.log(err.message, 2);
+      return {
+        error: true,
+        message: err.message,
+        code: 500,
+      };
+    }
+  }
 }
 
 module.exports = Chat;
