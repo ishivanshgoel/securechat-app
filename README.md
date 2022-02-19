@@ -1,7 +1,8 @@
 # Secret Chat
 This repository contains backend services for End-2-End encrypted chat application.
-### Application Repository: 
+### Mobile Application Repository: 
 https://github.com/Pratyush1211/MessengerCLI
+- Credits: <a href="https://github.com/Pratyush1211">Pratyush Motha</a>
 
 ## Overview
 End-to-end encrypted messaging means that the users within that specific chat can only read messages sent between two people. 
@@ -20,11 +21,11 @@ Real-time chat applications have grown tremendously. Most organizations have ado
 ## RSA Algorithm
 The RSA algorithm is an asymmetric cryptography algorithm; this means that it uses a public key and a private key (i.e two different, mathematically linked keys). As their names suggest, a public key is shared publicly, while a private key is secret and must not be shared with anyone.
 
-
+<img src="https://github.com/ishivanshgoel/secretChat/blob/master/docs/RSA.PNG">
 <a href="https://www.educative.io/edpresso/what-is-the-rsa-algorithm">Source</a>
 
 ## HLD
-
+<img src="https://github.com/ishivanshgoel/secretChat/blob/master/docs/flow%20secret%20chat.PNG">
 
 ## Setup
 - Create `.env` file in root directory
@@ -37,4 +38,24 @@ PORT = <-- PORT number for express server ---->
 ```
 
 ## LICENCE
+MIT License
 
+Copyright (c) 2021 Shivansh Goel
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
