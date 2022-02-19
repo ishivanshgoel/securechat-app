@@ -1,20 +1,18 @@
 const mongoose = require("mongoose")
+const logger = require('../../logger/logger')
 
 const connection = async () => {
     try {
-        console.log('URI ', process.env.DB_URI)
         await mongoose.connect(process.env.DB_URI,
             {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             });
-        console.log('Connected to the Database!!')
+        logger.log('Connected to the Database!!', 0)
 
     } catch (err) {
-        console.log('Error: ', err)
-        console.log('Database Connection failed!!')
+        logger.log('Database Connection failed: '+ err.message, 0)
     }
-
 };
 
 module.exports = connection
