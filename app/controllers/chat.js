@@ -1,5 +1,5 @@
-const Message = require("../../models/message");
-const logger = require("../../../logger/logger");
+const Message = require("../models/message");
+const logger = require("../../logger/logger");
 
 /**
  * @Chat class provides methods for chat functionality

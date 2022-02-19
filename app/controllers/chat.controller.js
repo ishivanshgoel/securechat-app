@@ -1,5 +1,5 @@
-const Message = require('../../models/message')
-const Key = require('../../models/key')
+const Message = require('../models/message')
+const Key = require('../models/key')
 const express = require('express')
 const chat = express.Router()
 

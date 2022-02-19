@@ -1,7 +1,7 @@
-const User = require('../../models/user')
+const User = require('../models/user')
 const express = require('express')
 const auth = express.Router()
-const { signAcessToken } = require('../../utils/jwt')
+const { signAcessToken } = require('../utils/jwt')
 
 auth.post('/login', async(req, res, next)=>{
     try{

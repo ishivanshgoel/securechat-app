@@ -1,4 +1,4 @@
-const { verifyAccessToekn } = require("../../utils/jwt");
+const { verifyAccessToekn } = require("../utils/jwt");
 
 function auth(req, res, next) {
   try {
@@ -10,8 +10,7 @@ function auth(req, res, next) {
     const token = bearerToken[1];
     let tokenValid = verifyAccessToekn(token);
     if (tokenValid) next();
-    else 
-        throw new Error("Unauthorized User");
+    else throw new Error("Unauthorized User");
   } catch (err) {
     next(err);
   }

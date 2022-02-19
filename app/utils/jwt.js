@@ -1,29 +1,25 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
+const logger = require("../../logger/logger");
 
 module.exports = {
-    signAcessToken: (userId)=> {
+  signAcessToken: (userId) => {
+    let payload = {
+      userId: userId,
+    };
 
-        let payload = {
-            userId: userId
-        }
+    let options = {
+      expiresIn: "365d",
+    };
 
-        let options = {
-            expiresIn: '365d'
-        }
+    const token = jwt.sign(payload, process.env.TOKEN_KEY, options);
 
-        const token = jwt.sign(
-            payload,
-            process.env.TOKEN_KEY,
-            options
-        );
+    logger.log("Token " + token, 1);
 
-        console.log('Token ', token)
+    return token;
+  },
 
-        return token
-    },
-
-    verifyAccessToken: (token)=>{
-        let payload = jwt.verify(token, process.env.TOKEN_KEY)
-        return payload
-    }
-}
+  verifyAccessToken: (token) => {
+    let payload = jwt.verify(token, process.env.TOKEN_KEY);
+    return payload;
+  },
+};

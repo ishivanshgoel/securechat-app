@@ -1,16 +1,15 @@
-const http = require('http')
-const app = require('./app')
-const socket = require('./socket')
-const logger = require('../logger/logger')
+const http = require("http");
+const app = require("./app");
+const socket = require("./socket");
+const logger = require("../logger/logger");
 
-function startServer(PORT){
+function startServer(PORT) {
+  const server = http.createServer(app);
+  socket(server);
 
-    const server = http.createServer(app);
-    socket(server)
-
-    server.listen(PORT, () => {
-        logger.log(`Listening at PORT: ${PORT}`, 0);
-    });
+  server.listen(PORT, () => {
+    logger.log(`Listening at PORT: ${PORT}`, 0);
+  });
 }
 
-module.exports = startServer
+module.exports = startServer;

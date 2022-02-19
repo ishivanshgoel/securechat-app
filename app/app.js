@@ -1,41 +1,38 @@
-const express = require('express')
-const app = express()
+const express = require("express");
+const app = express();
 
-const connection = require('./config/db')
-const logger = require('../logger/logger')
-require('dotenv').config()
-
-// controllers and middlewares
-const auth = require('./http/controllers/auth.controller')
-const chat = require('./http/controllers/chat.controller')
-const chatHandler = require('./socket/chatHandler')
-
+const connection = require("./config/db");
+const logger = require("../logger/logger");
 
 // database connection
-connection()
+connection();
+
+// controllers and middlewares
+const auth = require("./controllers/auth.controller");
+const chat = require("./controllers/chat.controller");
 
 // global middlewares
-app.use(express.json())
+app.use(express.json());
 
-app.use((req, res, next)=>{
-    console.log(`PATH: ${req.path}`)
-    next()
-})
-
+app.use((req, res, next) => {
+  logger.log(`PATH: ${req.path}`, 0);
+  next();
+});
 
 // app routes
-app.use('/auth', auth)
-app.use('/chat', chat)
-
+app.use("/auth", auth);
+app.use("/chat", chat);
 
 // error handler
-app.use((err, req, res, next)=>{
-    res.send({
-        error: {
-            status: err.status || 500,
-            message: err.message
-        }
-    })
-})
+app.use((err, req, res, next) => {
+  logger.log(err.message, 2);
 
-module.exports = app
+  res.send({
+    error: {
+      status: err.code || 500,
+      message: err.message,
+    },
+  });
+});
+
+module.exports = app;

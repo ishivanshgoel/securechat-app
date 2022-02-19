@@ -1,6 +1,6 @@
-const User = require("../../models/user");
-const { signAcessToken } = require("../../utils/jwt");
-const logger = require("../../../logger/logger");
+const User = require("../models/user");
+const { signAcessToken } = require("../utils/jwt");
+const logger = require("../../logger/logger");
 
 /**
  * @User class provides methods for operations related to user entity
