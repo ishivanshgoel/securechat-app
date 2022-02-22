@@ -7,14 +7,12 @@ const logger = require("../logger/logger");
 // database connection
 connection();
 
-// controllers and middlewares
-const auth = require("./controllers/auth.controller");
-const chat = require("./controllers/chat.controller");
-
-const user = require("./routes/user")
-
 // global middlewares
 app.use(express.json());
+
+// controllers
+const chat = require("./routes/chat");
+const user = require("./routes/user")
 
 app.use((req, res, next) => {
   logger.log(`PATH: ${req.path}`, 0);
@@ -22,7 +20,6 @@ app.use((req, res, next) => {
 });
 
 // app routes
-app.use("/auth", auth);
 app.use("/chat", chat);
 app.use("/user", user);
 
