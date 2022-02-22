@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const { signAcessToken } = require("../utils/jwt");
 const logger = require("../../logger/logger");
+const rsa = require("../utils/crypt/rsa");
 
 /**
  * @User class provides methods for operations related to user entity
@@ -77,9 +78,14 @@ class User {
           code: 409,
         };
 
+      // generate a pair of public and private key for user
+      let keys = await rsa.generateKeys();
+
+      // save public key only
       let newUser = new User({
         email: email.trim(),
         password: password.trim(),
+        key: keys.publicKey,
       });
 
       await newUser.save();
@@ -88,6 +94,7 @@ class User {
         error: false,
         email: newUser.email,
         accessToken: signAcessToken(newUser._id),
+        keys: keys,
         code: 200,
       };
     } catch (err) {
