@@ -7,7 +7,7 @@ const rsa = require("../utils/crypt/rsa");
  * @User class provides methods for operations related to user entity
  */
 
-class User {
+class UserController {
   /**
    * @property {Function} signin - user signin/ login
    * @returns access token and email on suceess and error object otherwise
@@ -79,7 +79,9 @@ class User {
         };
 
       // generate a pair of public and private key for user
-      let keys = await rsa.generateKeys();
+      let keys = rsa.generateKeys();
+
+      logger.log(`Keys: ${keys.publicKey}`, 2);
 
       // save public key only
       let newUser = new User({
@@ -108,4 +110,4 @@ class User {
   }
 }
 
-module.exports = User;
+module.exports = UserController;

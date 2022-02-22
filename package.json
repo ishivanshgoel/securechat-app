@@ -12,9 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^10.0.0",
+    "encrypt-rsa": "^1.2.1",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.6",
+    "node-rsa": "^1.1.1",
     "nodemon": "^2.0.15",
     "socket.io": "^4.2.0",
     "socket.io-client": "^4.4.0"

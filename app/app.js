@@ -11,6 +11,8 @@ connection();
 const auth = require("./controllers/auth.controller");
 const chat = require("./controllers/chat.controller");
 
+const user = require("./routes/user")
+
 // global middlewares
 app.use(express.json());
 
@@ -22,6 +24,7 @@ app.use((req, res, next) => {
 // app routes
 app.use("/auth", auth);
 app.use("/chat", chat);
+app.use("/user", user);
 
 // error handler
 app.use((err, req, res, next) => {
