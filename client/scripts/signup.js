@@ -1,5 +1,6 @@
 console.log("SignUp script attached!");
-let baseUrl = "http://localhost:3000/user/signup";
+let baseUrl = "http://localhost:3000/";
+let signInUrl = "http://127.0.0.1:5500/client/signin.html";
 
 function onSubmit(event) {
   event.preventDefault();
@@ -15,7 +16,7 @@ function onSubmit(event) {
     body: JSON.stringify(data),
   };
 
-  fetch(baseUrl, requestOptions).then(async (response) => {
+  fetch(baseUrl + "user/signup", requestOptions).then(async (response) => {
     let res = await response.json();
     if (res.error) {
       alert(err.message);
@@ -30,6 +31,7 @@ function onSubmit(event) {
       document.body.appendChild(downloadAnchorNode); // required for firefox
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
+      window.location.href = signInUrl;
       alert("Registered Successfully, Keep your private key Safe!!");
     }
   });

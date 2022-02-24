@@ -118,7 +118,7 @@ class UserController {
     try {
       logger.log("token " + token, 1);
       let res = verifyAccessToken(token);
-      console.log('Res ', res)
+      
       if (res.userId) {
         return {
           error: false,
