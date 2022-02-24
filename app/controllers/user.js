@@ -117,7 +117,8 @@ class UserController {
   static verifyUser(token) {
     try {
       logger.log("token " + token, 1);
-      let res = JSON.stringify(verifyAccessToken(token));
+      let res = verifyAccessToken(token);
+      console.log('Res ', res)
       if (res.userId) {
         return {
           error: false,
