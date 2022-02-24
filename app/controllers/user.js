@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const { signAcessToken } = require("../utils/jwt");
 const logger = require("../../logger/logger");
+const { verifyAccessToken } = require("../utils/jwt");
 const rsa = require("../utils/crypt/rsa");
 
 /**
@@ -105,6 +106,37 @@ class UserController {
         error: true,
         message: err.message,
         code: 500,
+      };
+    }
+  }
+
+  /**
+   * @property {Function} verifyUser - user verification
+   * @returns true if verified else false
+   */
+  static verifyUser(token) {
+    try {
+      logger.log("token " + token, 1);
+      let res = JSON.stringify(verifyAccessToken(token));
+      if (res.userId) {
+        return {
+          error: false,
+          status: true,
+          code: 200,
+        };
+      } else {
+        return {
+          error: false,
+          status: false,
+          code: 400,
+        };
+      }
+    } catch (err) {
+      return {
+        error: true,
+        message: err.message,
+        code: 500,
+        status: false,
       };
     }
   }
