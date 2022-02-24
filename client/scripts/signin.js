@@ -17,10 +17,8 @@ window.onload = function (e) {
 
     fetch(baseUrl + "user/verify", requestOptions).then(async (response) => {
       let res = await response.json();
-      if (res.error) {
-        alert(res.message);
-      } else {
-        if (res.status) window.location.href = homeUrl;
+      if (!res.error && res.message) {
+        window.location.href = homeUrl;
       }
     });
   }

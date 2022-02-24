@@ -35,6 +35,4 @@ function onSubmit(event) {
       alert("Registered Successfully, Keep your private key Safe!!");
     }
   });
-
-  console.log(email, password, displayName);
 }
