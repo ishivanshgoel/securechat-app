@@ -33,17 +33,17 @@ class UserController {
           code: 404,
         };
 
-      if (user.password != password.trim())
-        return {
-          error: true,
-          message: "Invalid Username/ Password",
-          code: 401,
-        };
+      // if (user.password != password.trim())
+      //   return {
+      //     error: true,
+      //     message: "Invalid Username/ Password",
+      //     code: 401,
+      //   };
 
       return {
         error: false,
         email: user.email,
-        accessToken: signAcessToken(user._id),
+        accessToken: signAcessToken(user.email),
         code: 200,
       };
     } catch (err) {
@@ -96,7 +96,7 @@ class UserController {
       return {
         error: false,
         email: newUser.email,
-        accessToken: signAcessToken(newUser._id),
+        accessToken: signAcessToken(newUser.email),
         keys: keys,
         code: 200,
       };

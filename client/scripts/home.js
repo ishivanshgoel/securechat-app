@@ -4,6 +4,8 @@ let baseUrl = "http://localhost:3000/";
 
 let signInUrl = "http://127.0.0.1:5500/client/signin.html";
 
+let chatListContainer = document.getElementById('chatListContainer')
+
 window.onload = function (e) {
   let token = localStorage.getItem("secret-chat-token");
 
@@ -28,8 +30,29 @@ window.onload = function (e) {
     window.location.href = signInUrl;
   }
 
-  // fetch chatlist of user
+  const requestOptions = {
+    method: "GET",
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'authorization': token, 
+    }
+  };
 
+  // fetch chatlist of user
+  fetch(baseUrl + "chat/chatlist", requestOptions).then(async (response) => {
+    let res = await response.json();
+    if (res.code == 200) {
+        console.log('CHAT LIST ', res)
+        let chatList = res.data
+        chatList.map((id)=>{
+            chatListContainer.innerHTML += chatListElement(id)
+        })
+    } else {
+        localStorage.removeItem("secret-chat-token");
+        window.location.href = signInUrl;
+    }
+  });
 
 
 
@@ -40,3 +63,18 @@ window.onload = function (e) {
 
 // socket method to send message
 
+
+// chat list element UI generator
+function chatListElement(id){
+    return `
+        <li class="clearfix">
+            <img
+                src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                alt="avatar"
+            />
+            <div class="about">
+                <div class="name">${id}</div>
+            </div>
+        </li>
+    `
+}

@@ -3,8 +3,7 @@ const logger = require('../../logger/logger')
 
 function auth(req, res, next) {
   try {
-
-    console.log('Headers ', req.headers)
+    
     if (!req.headers['authorization']) throw new Error("Unauthorized User");
     const authHeader = req.headers['authorization'];
     const token = authHeader

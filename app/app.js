@@ -1,12 +1,27 @@
 const express = require("express");
 const app = express();
-const cors = require('cors')
+const cors = require('cors');
+const mongoose = require('mongoose')
 
 const connection = require("./config/db");
 const logger = require("../logger/logger");
 
 // database connection
 connection();
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'))
+db.once('open', function() {
+    logger.log('Connected to database!!', 0)
+});
+db.on('disconnected', ()=>{
+    logger.log('Mongoose connection is disconnected', 1)
+})
+
+process.on('SIGINT', async ()=>{
+    await db.close()
+    process.exit(0)
+})
 
 // global middlewares
 app.use(cors())
