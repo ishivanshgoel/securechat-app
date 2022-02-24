@@ -49,7 +49,7 @@
     <link href="./css/signin.css" rel="stylesheet" />
   </head>
   <body class="text-center">
-    <form class="form-signin">
+    <form class="form-signin" onsubmit="onSubmit(event)">
       <h1 class="h3 mb-3 font-weight-normal my-3">🔒 Sign Up</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
       <input
@@ -77,11 +77,6 @@
         placeholder="Display Name"
         required
       />
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me" /> Remember me
-        </label>
-      </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">
         Sign Up
       </button>
@@ -89,8 +84,8 @@
       <a href="./signin.html" class="btn btn-lg btn-primary btn-block">
         Sign In
       </a>
-
       <p class="mt-5 mb-3 text-muted">&copy; 2017-2021</p>
     </form>
   </body>
+  <script src="./scripts/signup.js"></script>
 </html>

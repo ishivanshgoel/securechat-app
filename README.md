@@ -1,7 +1,5 @@
 # Secret Chat
 This repository contains backend services for End-2-End encrypted chat application.
-### Frontend Credits: 
-https://github.com/victorfclima/web-whatsapp-clone
 
 ## Overview
 End-to-end encrypted messaging means that the users within that specific chat can only read messages sent between two people. 

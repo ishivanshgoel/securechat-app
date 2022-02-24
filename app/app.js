@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require('cors')
 
 const connection = require("./config/db");
 const logger = require("../logger/logger");
@@ -8,6 +9,7 @@ const logger = require("../logger/logger");
 connection();
 
 // global middlewares
+app.use(cors())
 app.use(express.json());
 
 // controllers
