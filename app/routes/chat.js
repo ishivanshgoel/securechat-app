@@ -17,7 +17,7 @@ chat.get("/chatlist", auth, async (req, res, next) => {
   }
 });
 
-chat.get("/chatmessages", auth, async (req, res, next) => {
+chat.post("/chatmessages", auth, async (req, res, next) => {
   try {
     let { userId } = req.payload;
     let { friendId } = req.body;
