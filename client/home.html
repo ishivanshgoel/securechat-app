@@ -73,7 +73,7 @@
                   </div>
                 </div>
                 <div class="chat-history">
-                  <ul class="m-b-0">
+                  <ul class="m-b-0 chat-history-messages">
                     <li class="clearfix">
                       <div class="message other-message float-right">
                         Hi Aiden, how are you? How is the project coming along?
@@ -96,14 +96,15 @@
               <div class="chat-message clearfix">
                 <div class="input-group mb-0">
                   <div class="input-group-prepend">
-                    <button type="button" class="btn btn-outline-secondary">
+                    <button type="button" class="btn btn-outline-secondary" onclick="sendMessagetoFriend()">
                       Enter
                     </button>
                   </div>
                   <input
                     type="text"
                     class="form-control"
-                    placeholder="Enter text here..."
+                    placeholder="Enter message here..."
+                    id = "message-input-box"
                   />
                 </div>
               </div>

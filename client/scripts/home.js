@@ -6,7 +6,8 @@ let signInUrl = "http://127.0.0.1:5500/client/signin.html";
 
 let chatListContainer = document.getElementById("chatListContainer");
 let chatContainer = document.getElementById("chatMessagesContainer");
-let currentChatContainerUserId = null
+let currentChatContainerUserId = null;
+let socket;
 
 window.onload = function (e) {
   let token = localStorage.getItem("secret-chat-token");
@@ -32,7 +33,7 @@ window.onload = function (e) {
     window.location.href = signInUrl;
   }
 
-  let socket = io(baseUrl, {
+  socket = io(baseUrl, {
     auth: {
       token: token,
     },
@@ -94,24 +95,45 @@ function renderChat(friendId) {
     async (response) => {
       let res = await response.json();
       if (res.code == 200) {
-        chatContainer.innerHTML = chatMessages(friendId, res.data, id)
-        currentChatContainerUserId = friendId
+        chatContainer.innerHTML = chatMessages(friendId, res.data, id);
+        currentChatContainerUserId = friendId;
       } else {
-        alert('Error fetching current chat messages!!')
+        alert("Error fetching current chat messages!!");
       }
     }
   );
 }
 
 // encrypting chat message
-function encryptWithPublicKey(friendPublicKey, message){
-
-}
+function encryptWithPublicKey(friendPublicKey, message) {}
 
 // socket method to send message
-function sendMessagetoFriend(friendId){
+function sendMessagetoFriend() {
+  let id = localStorage.getItem("secret-chat-id");
+  let message = document.getElementById("message-input-box").value;
+
   // emit a socket event
+  let data = {
+    from: id,
+    to: currentChatContainerUserId,
+    message: message, // TODO: send encrypted message
+  };
+
+  console.log("Message ", message);
+
+  socket.emit("chat:send", data);
+
+  // append message to UI
+  let messageUI = chatMessage(id, message);
+
+  console.log("Message UI", messageUI);
+  
+  let chatHistory = document.querySelector(".chat-history-messages");
+  chatHistory.innerHTML += messageUI;
+  console.log('CHAT HISTORY ', chatHistory)
 }
+
+// ################ UI ELEMENTS ###################
 
 // chat list element UI generator
 function chatListElement(id) {
@@ -126,6 +148,23 @@ function chatListElement(id) {
             </div>
         </li>
     `;
+}
+
+// inject new message in chat
+function chatMessage(id, message) {
+  if (message.from == id) {
+    return `<li class="clearfix">
+      <div class="message other-message float-right">
+        ${message}
+      </div>
+    </li>`;
+  } else {
+    return `<li class="clearfix">
+      <div class="message my-message">
+      ${message}
+      </div>
+    </li>`;
+  }
 }
 
 // chatMessages element UI generator
@@ -156,26 +195,22 @@ function chatMessages(friendId, chatMessages, id) {
       </div>
     </div>
     <div class="chat-history">
-      <ul class="m-b-0">
-        ${
-
-          chatMessages.map((message)=>{
-
-            if(message.from == id){
-              return `<li class="clearfix">
+      <ul class="m-b-0 chat-history-messages">
+        ${chatMessages.map((message) => {
+          if (message.from == id) {
+            return `<li class="clearfix">
                 <div class="message other-message float-right">
                   ${message.message}
                 </div>
-              </li>`
-            } else {
+              </li>`;
+          } else {
             return `<li class="clearfix">
             <div class="message my-message">
             ${message.message}
             </div>
-          </li>`
-            }
-          })
-        }
+          </li>`;
+          }
+        })}
       </ul>
     </div>`;
 }
