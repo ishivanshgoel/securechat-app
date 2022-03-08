@@ -1,5 +1,6 @@
 const Message = require("../models/message");
 const logger = require("../../logger/logger");
+const UserController = require("../controllers/user");
 
 /**
  * @Chat class provides methods for chat functionality
@@ -58,8 +59,11 @@ class Chat {
         ],
       }).exec();
 
+      let key = await UserController.getPublicKey(friendId);
+
       return {
         data: messages,
+        key: key,
         error: false,
         code: 200,
       };

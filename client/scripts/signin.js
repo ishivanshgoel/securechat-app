@@ -44,6 +44,7 @@ function onSubmit(event) {
     } else {
       let token = res.accessToken;
       localStorage.setItem("secret-chat-token", token);
+      localStorage.setItem("secret-chat-id", email);
       window.location.href = homeUrl;
     }
   });

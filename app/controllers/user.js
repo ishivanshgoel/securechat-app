@@ -118,7 +118,7 @@ class UserController {
     try {
       logger.log("token " + token, 1);
       let res = verifyAccessToken(token);
-      
+
       if (res.userId) {
         return {
           error: false,
@@ -132,6 +132,45 @@ class UserController {
           code: 400,
         };
       }
+    } catch (err) {
+      return {
+        error: true,
+        message: err.message,
+        code: 500,
+        status: false,
+      };
+    }
+  }
+
+  /**
+   * @property {Function} getPublicKey - get public key if user
+   * @returns public key of user else error object
+   */
+  static async getPublicKey(email) {
+    try {
+
+      if (!email)
+        return {
+          error: true,
+          message: "Invalid Request!",
+          code: 404,
+        };
+
+      // check if user exists
+      let user = await User.findOne({ email: email.trim() }).exec();
+
+      if (!user)
+        return {
+          error: true,
+          message: "User does not exist",
+          code: 404,
+        };
+
+      return {
+        error: false,
+        key: user.key,
+        code: 200,
+      };
     } catch (err) {
       return {
         error: true,

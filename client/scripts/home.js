@@ -76,6 +76,7 @@ window.onload = function (e) {
 function renderChat(friendId) {
   console.log("FETCH CHAT OF ID ", friendId);
   let token = localStorage.getItem("secret-chat-token");
+  let id = localStorage.getItem("secret-chat-id");
 
   let data = { friendId };
   const requestOptions = {
@@ -93,7 +94,7 @@ function renderChat(friendId) {
     async (response) => {
       let res = await response.json();
       if (res.code == 200) {
-        chatContainer.innerHTML = chatMessages(friendId, res.data)
+        chatContainer.innerHTML = chatMessages(friendId, res.data, id)
         currentChatContainerUserId = friendId
       } else {
         alert('Error fetching current chat messages!!')
@@ -128,7 +129,7 @@ function chatListElement(id) {
 }
 
 // chatMessages element UI generator
-function chatMessages(friendId, chatMessages) {
+function chatMessages(friendId, chatMessages, id) {
   return `
     <div class="chat-header clearfix">
       <div class="row">
@@ -159,18 +160,22 @@ function chatMessages(friendId, chatMessages) {
         ${
 
           chatMessages.map((message)=>{
-            return `<li class="clearfix">
+
+            if(message.from == id){
+              return `<li class="clearfix">
                 <div class="message other-message float-right">
                   ${message.message}
                 </div>
               </li>`
+            } else {
+            return `<li class="clearfix">
+            <div class="message my-message">
+            ${message.message}
+            </div>
+          </li>`
+            }
           })
         }
-        <li class="clearfix">
-          <div class="message my-message">
-            Are we meeting today?
-          </div>
-        </li>
       </ul>
     </div>`;
 }
