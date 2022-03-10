@@ -1,6 +1,6 @@
 const Message = require("../models/message");
 const logger = require("../../logger/logger");
-const UserController = require("../controllers/user");
+const UserController = require("../controllers/auth");
 
 /**
  * @Chat class provides methods for chat functionality

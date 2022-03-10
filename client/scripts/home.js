@@ -71,6 +71,16 @@ window.onload = function (e) {
   socket.on("disconnect", () => {
     socket.connect();
   });
+
+  // receive message
+  socket.on("chat:receive", (data) => {
+    if (data.from == currentChatContainerUserId) {
+      let messageUI = chatMessage(data.from, data.message);
+      let chatHistory = document.querySelector(".chat-history-messages");
+      chatHistory.innerHTML += messageUI;
+      console.log("CHAT HISTORY ", chatHistory);
+    }
+  });
 };
 
 // function to get chats with particular user
@@ -127,10 +137,10 @@ function sendMessagetoFriend() {
   let messageUI = chatMessage(id, message);
 
   console.log("Message UI", messageUI);
-  
+
   let chatHistory = document.querySelector(".chat-history-messages");
   chatHistory.innerHTML += messageUI;
-  console.log('CHAT HISTORY ', chatHistory)
+  console.log("CHAT HISTORY ", chatHistory);
 }
 
 // ################ UI ELEMENTS ###################
@@ -152,7 +162,9 @@ function chatListElement(id) {
 
 // inject new message in chat
 function chatMessage(id, message) {
-  if (message.from == id) {
+  let myId = localStorage.getItem("secret-chat-id");
+
+  if (myId == id) {
     return `<li class="clearfix">
       <div class="message other-message float-right">
         ${message}
