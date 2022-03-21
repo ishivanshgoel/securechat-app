@@ -11,4 +11,4 @@ const friendSchema = new Schema({
   friends: { type: Object, default: [] }
 });
 
-module.exports = mongoose.model("Friend", friendSchema);
+module.exports = mongoose.model("Friends", friendSchema);

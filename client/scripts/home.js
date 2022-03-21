@@ -8,6 +8,7 @@ let chatListContainer = document.getElementById("chatListContainer");
 let chatContainer = document.getElementById("chatMessagesContainer");
 let currentChatContainerUserId = null;
 let socket;
+let publicKey; // publicKey of current friend
 
 window.onload = function (e) {
   let token = localStorage.getItem("secret-chat-token");
@@ -105,7 +106,8 @@ function renderChat(friendId) {
     async (response) => {
       let res = await response.json();
       if (res.code == 200) {
-        chatContainer.innerHTML = chatMessages(friendId, res.data, id);
+        publicKey = res.key;
+        chatContainer.innerHTML = chatMessages(friendId, res.data, id, publicKey);
         currentChatContainerUserId = friendId;
       } else {
         alert("Error fetching current chat messages!!");
@@ -115,7 +117,24 @@ function renderChat(friendId) {
 }
 
 // encrypting chat message
-function encryptWithPublicKey(friendPublicKey, message) {}
+function encryptWithPublicKey(friendPublicKey, message) {
+  // Encrypt with the public key...
+  let encrypt = new JSEncrypt();
+  encrypt.setPublicKey(friendPublicKey);
+  let encrypted = encrypt.encrypt(message);
+  console.log('Ecrypted ', encrypted);
+  return encrypted;
+}
+
+// decrypt chat message
+function decryptWithPrivateKey(message){
+  let decrypt = new JSEncrypt();
+  let privateKey = localstorage.getItem("secret-chat-key"); // TODO: convert to JSON
+  decrypt.setPrivateKey(privateKey);
+  let uncrypted = decrypt.decrypt(message);
+  return uncrypted;
+}
+
 
 // socket method to send message
 function sendMessagetoFriend() {
@@ -126,7 +145,7 @@ function sendMessagetoFriend() {
   let data = {
     from: id,
     to: currentChatContainerUserId,
-    message: message, // TODO: send encrypted message
+    message: encryptWithPublicKey(publicKey, message), // TODO: send encrypted message
   };
 
   console.log("Message ", message);
@@ -180,7 +199,7 @@ function chatMessage(id, message) {
 }
 
 // chatMessages element UI generator
-function chatMessages(friendId, chatMessages, id) {
+function chatMessages(friendId, chatMessages, id, publicKey) {
   return `
     <div class="chat-header clearfix">
       <div class="row">

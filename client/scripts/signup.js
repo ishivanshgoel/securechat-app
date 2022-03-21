@@ -25,6 +25,7 @@ function onSubmit(event) {
       let dataStr =
         "data:text/json;charset=utf-8," +
         encodeURIComponent(JSON.stringify(keys, undefined, 2));
+      localStorage.setItem("secret-chat-key", JSON.stringify(keys, undefined, 2));
       let downloadAnchorNode = document.createElement("a");
       downloadAnchorNode.setAttribute("href", dataStr);
       downloadAnchorNode.setAttribute("download", `${email}_keys.json`);
