@@ -5,9 +5,9 @@ const logger = require("../../logger/logger");
 class User {
 
     /**
-   * @property {Function} friendList - fetches friend list of a user
-   * @returns an array of user ids
-   */
+     * @property {Function} friendList - fetches friend list of a user
+     * @returns an array of user ids
+     */
 
     static async friendList(id) {
         try {
@@ -35,6 +35,12 @@ class User {
         }
     }
 
+
+    /**
+     * @property {Function} sendFriendRequest - sends friend request to a user
+     * @returns true if sent else error
+     */
+
     static async sendFriendRequest(from, to){
         try{
 
@@ -45,7 +51,14 @@ class User {
                     code: 400,
                 };
             // send friend request
+            let request = new Request({
+                from: from,
+                to: to,
+            });
+        
+            await request.save();
 
+            return true;
 
         } catch(err){
             logger.log(err.message, 2);
@@ -56,6 +69,50 @@ class User {
             };
         }
     }
+
+    /**
+     * @property {Function} acceptFriendRequest - accepts friend request to a user
+     * @returns true if sent else error
+     */
+
+    // email is of user who got the friend request
+    // of is email id of user who sent the request
+     static async acceptFriendRequest(email, of){
+        try{
+
+            if (!email || !of)
+                return {
+                    error: true,
+                    message: "Bad Request!",
+                    code: 400,
+                };
+
+            // find request
+            let friendRequest = await Request.findOne({ from: of, to: email }).exec();
+        
+            if(!friendRequest) throw new Error("Friend Request does not exist");
+
+            // add to friend list of user who is accepting the request
+            let friendList = await Friend.findOneAndUpdate( { email : email }, {"$push": { "friends": of } }).exec();
+            friendRequest.status = true; // accept the request
+            await friendRequest.save();
+
+            return {
+                data: friendList,
+                error: false,
+                code: 200,
+            };
+
+        } catch(err){
+            logger.log(err.message, 2);
+            return {
+                error: true,
+                message: err.message,
+                code: 500,
+            };
+        }
+    }
+
 }
 
 module.exports = User;
