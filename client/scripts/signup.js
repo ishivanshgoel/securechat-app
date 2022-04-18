@@ -16,7 +16,7 @@ function onSubmit(event) {
     body: JSON.stringify(data),
   };
 
-  fetch(baseUrl + "user/signup", requestOptions).then(async (response) => {
+  fetch(baseUrl + "auth/signup", requestOptions).then(async (response) => {
     let res = await response.json();
     if (res.error) {
       alert(err.message);

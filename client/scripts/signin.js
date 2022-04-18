@@ -15,7 +15,7 @@ window.onload = function (e) {
       body: JSON.stringify(data),
     };
 
-    fetch(baseUrl + "user/verify", requestOptions).then(async (response) => {
+    fetch(baseUrl + "auth/verify", requestOptions).then(async (response) => {
       let res = await response.json();
       if (!res.error && res.message) {
         window.location.href = homeUrl;
@@ -37,7 +37,7 @@ function onSubmit(event) {
     body: JSON.stringify(data),
   };
 
-  fetch(baseUrl + "user/signin", requestOptions).then(async (response) => {
+  fetch(baseUrl + "auth/signin", requestOptions).then(async (response) => {
     let res = await response.json();
     if (res.error) {
       alert(res.message);

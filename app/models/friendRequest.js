@@ -10,7 +10,10 @@ const Schema = mongoose.Schema;
 const friendRequest = new Schema({
   from: String,
   to: String,
-  status: Boolean
+  status: {
+    type: Boolean,
+    default: false
+  }
 })
 
 module.exports = mongoose.model("Friend", friendRequest);

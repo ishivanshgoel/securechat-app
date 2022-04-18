@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
  */
 
 const friendSchema = new Schema({
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true },
   friends: { type: Object, default: [] }
 });
 

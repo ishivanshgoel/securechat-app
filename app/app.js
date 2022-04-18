@@ -29,7 +29,8 @@ app.use(express.json());
 
 // controllers
 const chat = require("./routes/chat");
-const user = require("./routes/user")
+const auth = require("./routes/auth");
+const user = require("./routes/user");
 
 app.use((req, res, next) => {
   logger.log(`PATH: ${req.path}`, 0);
@@ -38,6 +39,7 @@ app.use((req, res, next) => {
 
 // app routes
 app.use("/chat", chat);
+app.use("/auth", auth);
 app.use("/user", user);
 
 // error handler

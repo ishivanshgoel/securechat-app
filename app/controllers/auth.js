@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const { signAcessToken } = require("../utils/jwt");
+const Friend = require("../models/friend");
 const logger = require("../../logger/logger");
 const { verifyAccessToken } = require("../utils/jwt");
 const rsa = require("../utils/crypt/rsa");
@@ -92,6 +93,14 @@ class Auth {
       });
 
       await newUser.save();
+
+
+      // create new friends schema (to hold friends list)
+      let newFriendSchema = new Friend({
+        email: email.trim()
+      })
+
+      await newFriendSchema.save();
 
       return {
         error: false,

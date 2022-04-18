@@ -6,6 +6,7 @@ let signInUrl = "http://127.0.0.1:5500/client/signin.html";
 
 let chatListContainer = document.getElementById("chatListContainer");
 let chatContainer = document.getElementById("chatMessagesContainer");
+let friendRequest = document.getElementById("friend-request-button");
 let currentChatContainerUserId = null;
 let socket;
 let publicKey; // publicKey of current friend
@@ -22,7 +23,7 @@ window.onload = function (e) {
       body: JSON.stringify(data),
     };
 
-    fetch(baseUrl + "user/verify", requestOptions).then(async (response) => {
+    fetch(baseUrl + "auth/verify", requestOptions).then(async (response) => {
       let res = await response.json();
       if (res.error) {
         localStorage.removeItem("secret-chat-token");
@@ -48,6 +49,22 @@ window.onload = function (e) {
       authorization: token,
     },
   };
+
+  // fetch friend requests of user
+  fetch(baseUrl + "chat/chatlist", requestOptions).then(async (response) => {
+    let res = await response.json();
+    if (res.code == 200) {
+      console.log("CHAT LIST ", res);
+      let chatList = res.data;
+      chatList.map((id) => {
+        chatListContainer.innerHTML += chatListElement(id);
+      });
+    } else {
+      localStorage.removeItem("secret-chat-token");
+      window.location.href = signInUrl;
+    }
+  });
+
 
   // fetch chatlist of user
   fetch(baseUrl + "chat/chatlist", requestOptions).then(async (response) => {
@@ -83,6 +100,41 @@ window.onload = function (e) {
     }
   });
 };
+
+// function to send friend request to a user
+function sendFriendRequest() {
+  let email = document.getElementById("friend-request-email-id").value;
+  console.log("Freind Request " + email);
+
+  let token = localStorage.getItem("secret-chat-token");
+  let id = localStorage.getItem("secret-chat-id");
+
+  let data = { to: email };
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      authorization: token,
+    },
+    body: JSON.stringify(data),
+  };
+
+  // send friend request to user
+  fetch(baseUrl + "user/sendRequest", requestOptions).then(
+    async (response) => {
+      let res = await response.json();
+      if (res.code == 200) {
+        publicKey = res.key;
+        chatContainer.innerHTML = chatMessages(friendId, res.data, id, publicKey);
+        currentChatContainerUserId = friendId;
+      } else {
+        alert(res.error.message);
+      }
+    }
+  );
+
+}
 
 // function to get chats with particular user
 function renderChat(friendId) {

@@ -1,6 +1,8 @@
 const Friend = require("../models/friend");
-const Request = require("../models/friendRequest")
+const Request = require("../models/friendRequest");
+const UserModel= require("../models/user");
 const logger = require("../../logger/logger");
+
 
 class User {
 
@@ -38,7 +40,7 @@ class User {
 
     /**
      * @property {Function} sendFriendRequest - sends friend request to a user
-     * @returns true if sent else error
+     * @returns status code 200 if sent else error
      */
 
     static async sendFriendRequest(from, to){
@@ -50,6 +52,27 @@ class User {
                     message: "Bad Request!",
                     code: 400,
                 };
+            
+            // if same email id as of user
+            if (from == to)
+                return {
+                    error: true,
+                    message: "You cannot add yourself as friend ;)",
+                    code: 400,
+                };
+
+            // if user does not exist
+            // check if user exists
+            let user = await UserModel.findOne({ email: to.trim() }).exec();
+
+            if (!user)
+                return {
+                    error: true,
+                    message: "User does not exist",
+                    code: 404,
+                };
+
+
             // send friend request
             let request = new Request({
                 from: from,
@@ -58,7 +81,44 @@ class User {
         
             await request.save();
 
-            return true;
+            return {
+                error: false,
+                code: 200,
+            };
+
+        } catch(err){
+            logger.log(err.message, 2);
+            return {
+                error: true,
+                message: err.message,
+                code: 500,
+            };
+        }
+    }
+
+    /**
+     * @property {Function} friendRequestList - friendRequest list
+     * @returns list of friend requests
+     */
+
+     static async friendRequestList(email){
+        try{
+
+            if (!email)
+                return {
+                    error: true,
+                    message: "Bad Request!",
+                    code: 400,
+                };
+
+            // find requests list
+            let friendRequest = await Request.findOne({ to: email }).exec();
+
+            return {
+                data: friendRequest,
+                error: false,
+                code: 200,
+            };
 
         } catch(err){
             logger.log(err.message, 2);
