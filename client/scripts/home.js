@@ -125,9 +125,7 @@ function sendFriendRequest() {
     async (response) => {
       let res = await response.json();
       if (res.code == 200) {
-        publicKey = res.key;
-        chatContainer.innerHTML = chatMessages(friendId, res.data, id, publicKey);
-        currentChatContainerUserId = friendId;
+        alert(res.message);
       } else {
         alert(res.error.message);
       }
@@ -135,6 +133,77 @@ function sendFriendRequest() {
   );
 
 }
+
+// fetch friend request list
+function fetchFriendRequestList() {
+
+  let token = localStorage.getItem("secret-chat-token");
+  let id = localStorage.getItem("secret-chat-id");
+
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      authorization: token,
+    }
+  };
+
+  // fetch friend request list
+  fetch(baseUrl + "user/friendRequestList", requestOptions).then(
+    async (response) => {
+      let res = await response.json();
+      if (res.code == 200) {
+
+        let requests = res.data;
+        let uiRequest = ``;
+        
+        requests.map((request)=>{
+          let ui = `<button type="button" class="btn btn-success" onclick="acceptFriendRequest('${request.from}')">${request.from} Accept</button>`
+          uiRequest += ui;
+        })
+
+        friendRequest.innerHTML = '';
+
+        friendRequest.innerHTML += uiRequest;
+
+      } else {
+        alert(res.error.message);
+      }
+    }
+  );
+}
+
+// function to accept friend request
+function acceptFriendRequest(of) {
+
+  let token = localStorage.getItem("secret-chat-token");
+  let id = localStorage.getItem("secret-chat-id");
+  let data = { of };
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      authorization: token,
+    },
+    body: JSON.stringify(data),
+  };
+
+  // fetch friend request list
+  fetch(baseUrl + "user/acceptFriendRequest", requestOptions).then(
+    async (response) => {
+      let res = await response.json();
+      if (res.code == 200) {
+        console.log(res.data);
+      } else {
+        alert(res.error.message);
+      }
+    }
+  );
+
+}
+
 
 // function to get chats with particular user
 function renderChat(friendId) {

@@ -82,6 +82,7 @@ class User {
             await request.save();
 
             return {
+                message: "Friend Request Sent!",
                 error: false,
                 code: 200,
             };
@@ -112,7 +113,7 @@ class User {
                 };
 
             // find requests list
-            let friendRequest = await Request.findOne({ to: email }).exec();
+            let friendRequest = await Request.find({ to: email, status: false }).exec();
 
             return {
                 data: friendRequest,
@@ -152,8 +153,14 @@ class User {
         
             if(!friendRequest) throw new Error("Friend Request does not exist");
 
-            // add to friend list of user who is accepting the request
+            // add to friend list
             let friendList = await Friend.findOneAndUpdate( { email : email }, {"$push": { "friends": of } }).exec();
+            
+            let friendList2 = await Friend.findOneAndUpdate( { email : of }, {"$push": { "friends": email } }).exec();
+
+            console.log('Friends UPDATED ', friendList);
+            console.log('Friends UPDATED ', friendList2);
+            
             friendRequest.status = true; // accept the request
             await friendRequest.save();
 
