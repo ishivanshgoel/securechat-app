@@ -13,14 +13,14 @@ class User {
 
     static async friendList(id) {
         try {
-            if (!userId)
+            if (!id)
                 return {
-                error: true,
-                message: "Bad Request!",
-                code: 400,
+                    error: true,
+                    message: "Bad Request!",
+                    code: 400,
                 };
 
-            let friendList = await Friend.find({ email: id }).exec();
+            let friendList = await Friend.findOne({ email: id }).exec();
 
             return {
                 data: friendList,
@@ -158,9 +158,6 @@ class User {
             
             let friendList2 = await Friend.findOneAndUpdate( { email : of }, {"$push": { "friends": email } }).exec();
 
-            console.log('Friends UPDATED ', friendList);
-            console.log('Friends UPDATED ', friendList2);
-            
             friendRequest.status = true; // accept the request
             await friendRequest.save();
 

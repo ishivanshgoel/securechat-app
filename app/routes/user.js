@@ -56,6 +56,23 @@ user.post("/acceptFriendRequest", auth, async (req, res, next) => {
     }
 });
 
+// fetch friends
+user.get("/friends", auth, async (req, res, next) => {
+    try {
+      const { userId } = req.payload;
+      console.log('USER ID ', userId)
+  
+      let response = await controller.friendList(userId);
+  
+      if (response.error) {
+        throw response;
+      } else {
+        res.json(response);
+      }
+    } catch (err) {
+      next(err);
+    }
+});
 
 
 

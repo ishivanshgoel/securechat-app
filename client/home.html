@@ -151,7 +151,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Your Private Key</h5>
             <button
               type="button"
               class="btn-close"
@@ -168,6 +168,7 @@
                 placeholder="Private Key"
                 aria-label="Private-Key"
                 aria-describedby="basic-addon1"
+                id = "private-key-modal"
               />
             </div>
           </div>
@@ -179,7 +180,8 @@
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-primary" onclick="savePrivateKey()">Save</button>
+            <button type="button" class="btn btn-primary" onclick="fetchPrivateKey()">Fetch</button>
           </div>
         </div>
       </div>

@@ -50,28 +50,12 @@ window.onload = function (e) {
     },
   };
 
-  // fetch friend requests of user
-  fetch(baseUrl + "chat/chatlist", requestOptions).then(async (response) => {
+  // fetch friends of user
+  fetch(baseUrl + "user/friends", requestOptions).then(async (response) => {
     let res = await response.json();
     if (res.code == 200) {
-      console.log("CHAT LIST ", res);
-      let chatList = res.data;
-      chatList.map((id) => {
-        chatListContainer.innerHTML += chatListElement(id);
-      });
-    } else {
-      localStorage.removeItem("secret-chat-token");
-      window.location.href = signInUrl;
-    }
-  });
-
-
-  // fetch chatlist of user
-  fetch(baseUrl + "chat/chatlist", requestOptions).then(async (response) => {
-    let res = await response.json();
-    if (res.code == 200) {
-      console.log("CHAT LIST ", res);
-      let chatList = res.data;
+      console.log("FRIENDS LIST ", res);
+      let chatList = res.data.friends;
       chatList.map((id) => {
         chatListContainer.innerHTML += chatListElement(id);
       });
@@ -99,6 +83,10 @@ window.onload = function (e) {
       console.log("CHAT HISTORY ", chatHistory);
     }
   });
+
+  let privateKey = localStorage.getItem("secret-chat-key");
+  if(!privateKey) alert("Private Key not found!!");
+
 };
 
 // function to send friend request to a user
@@ -132,6 +120,17 @@ function sendFriendRequest() {
     }
   );
 
+}
+
+function savePrivateKey() {
+  let value = document.getElementById("private-key-modal").value
+  console.log("Private Key ", value)
+  localStorage.setItem("secret-chat-key", value)
+}
+
+function fetchPrivateKey() {
+  let value = localStorage.getItem("secret-chat-key")
+  document.getElementById("private-key-modal").value = value
 }
 
 // fetch friend request list
@@ -240,6 +239,9 @@ function renderChat(friendId) {
 // encrypting chat message
 function encryptWithPublicKey(friendPublicKey, message) {
   // Encrypt with the public key...
+  friendPublicKey = friendPublicKey.key
+  console.log("Public Key ", friendPublicKey)
+  console.log("Message ", message)
   let encrypt = new JSEncrypt();
   encrypt.setPublicKey(friendPublicKey);
   let encrypted = encrypt.encrypt(message);
@@ -250,7 +252,8 @@ function encryptWithPublicKey(friendPublicKey, message) {
 // decrypt chat message
 function decryptWithPrivateKey(message){
   let decrypt = new JSEncrypt();
-  let privateKey = localstorage.getItem("secret-chat-key"); // TODO: convert to JSON
+  let privateKey = localStorage.getItem("secret-chat-key"); // TODO: convert to JSON
+  console.log("Private Key ", privateKey);
   decrypt.setPrivateKey(privateKey);
   let uncrypted = decrypt.decrypt(message);
   return uncrypted;
@@ -352,13 +355,13 @@ function chatMessages(friendId, chatMessages, id, publicKey) {
           if (message.from == id) {
             return `<li class="clearfix">
                 <div class="message other-message float-right">
-                  ${message.message}
+                  ${decryptWithPrivateKey(message.message)}
                 </div>
               </li>`;
           } else {
             return `<li class="clearfix">
             <div class="message my-message">
-            ${message.message}
+            ${decryptWithPrivateKey(message.message)}
             </div>
           </li>`;
           }

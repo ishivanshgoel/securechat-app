@@ -1,7 +1,7 @@
 const logger = require("../logger/logger");
 const { Server } = require("socket.io");
 const chatHandler = require("./socket/chatHandler")
-const userController = require("../app/controllers/user")
+const authController = require("../app/controllers/auth")
 
 function socket(server) {
   const io = new Server(server, {
@@ -22,7 +22,7 @@ function socket(server) {
   // check if the user is authorised
   io.use((socket, next) => {
     let token = socket.handshake.auth.token;
-    if(userController.verifyUser(token).status == true){
+    if(authController.verifyUser(token).status == true){
       console.log('TOKEN ', token)
       next();
     } else {
