@@ -195,7 +195,7 @@ function fetchFriendRequestList() {
           let uiRequest = ``;
         
           requests.map((request)=>{
-            let ui = `<button type="button" class="btn btn-success" onclick="acceptFriendRequest('${request.from}')">${request.from} Accept</button>`
+            let ui = `<button type="button" class="btn btn-success" onclick="acceptFriendRequest('${request.from}')">${request.from} Accept ✅</button>`
             uiRequest += ui;
           })
 
@@ -319,6 +319,18 @@ function decryptWithPrivateKey(message){
   return uncrypted;
 }
 
+
+var inputMessage = document.getElementById("message-input-box");
+
+// Execute a function when the user releases a key on the keyboard
+inputMessage.addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    sendMessagetoFriend()
+  }
+});
 
 // socket method to send message
 function sendMessagetoFriend() {

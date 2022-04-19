@@ -48,19 +48,20 @@
         </div>
       </div>
       <div class="row clearfix">
-        <div id="user-account">User ID: </div>
-        <div class="dropdown" style="margin: 3px;">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="friend-request-list" data-bs-toggle="dropdown" aria-expanded="false" onclick="fetchFriendRequestList()">
-            Friend Requests
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="friend-request-list" id="friend-request-button">
-            <p style="margin: 10px;">No Pending Requests!</p>
-          </ul>
+        <div id="user-account">👤 User ID: </div>
+
+        <div class="input-group mb-4" style="margin-top: 5px;">
+          <button class="btn btn-outline-secondary" type="button" id="send-friend-request" onclick="sendFriendRequest()">Send 🔍</button>
+          <input type="text" class="form-control" placeholder="Send Friend Request" aria-label="Username" aria-describedby="basic-addon1" id="friend-request-email-id">
         </div>
 
-        <div class="input-group mb-4">
-          <button class="btn btn-outline-secondary" type="button" id="send-friend-request" onclick="sendFriendRequest()">Send</button>
-          <input type="text" class="form-control" placeholder="Send Friend Request" aria-label="Username" aria-describedby="basic-addon1" id="friend-request-email-id">
+        <div class="dropdown" style="margin: 3px;">
+          <button class="btn btn-outline-secondary" type="button" id="friend-request-list" data-bs-toggle="dropdown" aria-expanded="false" onclick="fetchFriendRequestList()">
+            🌎 Friend Requests
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="friend-request-list" id="friend-request-button">
+            <p style="margin: 10px;">❌ No Pending Requests!</p>
+          </ul>
         </div>
 
         <div class="col-lg-12">
@@ -78,7 +79,7 @@
                 <div class="input-group mb-0">
                   <div class="input-group-prepend">
                     <button type="button" class="btn btn-outline-secondary" onclick="sendMessagetoFriend()">
-                      Enter
+                      Send 🚀
                     </button>
                   </div>
                   <input
