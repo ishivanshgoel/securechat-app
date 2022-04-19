@@ -2,6 +2,29 @@ console.log("SignUp script attached!");
 let baseUrl = "http://localhost:3000/";
 let signInUrl = "http://127.0.0.1:5500/client/signin.html";
 
+let homeUrl = "http://127.0.0.1:5500/client/home.html";
+
+window.onload = function (e) {
+  let token = localStorage.getItem("secret-chat-token");
+
+  // verify access token
+  if (token) {
+    let data = { token };
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    };
+
+    fetch(baseUrl + "auth/verify", requestOptions).then(async (response) => {
+      let res = await response.json();
+      if (!res.error && res.message) {
+        window.location.href = homeUrl;
+      }
+    });
+  }
+};
+
 function onSubmit(event) {
   event.preventDefault();
   let email = document.getElementById("inputEmail").value;

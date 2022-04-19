@@ -39,8 +39,7 @@ window.onload = function (e) {
     fetch(baseUrl + "auth/verify", requestOptions).then(async (response) => {
       let res = await response.json();
       if (res.error) {
-        localStorage.removeItem("secret-chat-token");
-        window.location.href = signInUrl;
+        logout()
       }
     });
   } else {
@@ -105,8 +104,8 @@ window.onload = function (e) {
   });
 
   let privateKey = localStorage.getItem("secret-chat-key");
-  if(!privateKey) alert("Private Key not found!!");
-
+  let pubKey = localStorage.removeItem("secret-chat-key-1");
+  if(!privateKey || !pubKey ) alert("Key Pair not found!!");
   document.getElementById("user-account").innerHTML += id
 
 };
@@ -457,4 +456,12 @@ function chatMessages(friendId, chatMessages, id) {
       }
       </ul>
     </div>`;
+}
+
+function logout() {
+  localStorage.removeItem("secret-chat-token");
+  localStorage.removeItem("secret-chat-id");
+  localStorage.removeItem("secret-chat-key-1");
+  localStorage.removeItem("secret-chat-key");
+  window.location.href = signInUrl;
 }
