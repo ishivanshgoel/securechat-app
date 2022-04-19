@@ -7,11 +7,24 @@ let signInUrl = "http://127.0.0.1:5500/client/signin.html";
 let chatListContainer = document.getElementById("chatListContainer");
 let chatContainer = document.getElementById("chatMessagesContainer");
 let friendRequest = document.getElementById("friend-request-button");
+let loader = document.getElementById("loader-screen");
 let currentChatContainerUserId = null;
 let socket;
 let publicKey; // publicKey of current friend
 
+function showLoader() {
+  console.log('Loader ', loader)
+  loader.style.visibility = "visible";
+}
+
+function hideLoader() {
+  loader.style.visibility = "hidden";
+}
+
 window.onload = function (e) {
+
+  // showLoader()
+
   let token = localStorage.getItem("secret-chat-token");
 
   // verify access token
@@ -59,9 +72,11 @@ window.onload = function (e) {
       chatList.map((id) => {
         chatListContainer.innerHTML += chatListElement(id);
       });
+      hideLoader()
     } else {
       localStorage.removeItem("secret-chat-token");
       window.location.href = signInUrl;
+      hideLoader()
     }
   });
 
@@ -84,6 +99,7 @@ window.onload = function (e) {
       let messageUI = chatMessage(data.from, data.message);
       let chatHistory = document.querySelector(".chat-history-messages");
       chatHistory.innerHTML += messageUI;
+      scrollToBotton()
       console.log("CHAT HISTORY ", chatHistory);
     }
   });
@@ -91,10 +107,13 @@ window.onload = function (e) {
   let privateKey = localStorage.getItem("secret-chat-key");
   if(!privateKey) alert("Private Key not found!!");
 
+  document.getElementById("user-account").innerHTML += id
+
 };
 
 // function to send friend request to a user
 function sendFriendRequest() {
+  showLoader()
   let email = document.getElementById("friend-request-email-id").value;
   console.log("Freind Request " + email);
 
@@ -118,12 +137,15 @@ function sendFriendRequest() {
       let res = await response.json();
       if (res.code == 200) {
         alert(res.message);
+        hideLoader()
       } else {
         alert(res.error.message);
+        hideLoader()
       }
     }
   );
 
+  document.getElementById("friend-request-email-id").value = ""
 }
 
 function savePrivateKey() {
@@ -147,6 +169,8 @@ function fetchPrivateKey() {
 // fetch friend request list
 function fetchFriendRequestList() {
 
+  showLoader()
+
   let token = localStorage.getItem("secret-chat-token");
   let id = localStorage.getItem("secret-chat-id");
 
@@ -166,19 +190,25 @@ function fetchFriendRequestList() {
       if (res.code == 200) {
 
         let requests = res.data;
-        let uiRequest = ``;
+
+        if(requests.length > 0){
+          let uiRequest = ``;
         
-        requests.map((request)=>{
-          let ui = `<button type="button" class="btn btn-success" onclick="acceptFriendRequest('${request.from}')">${request.from} Accept</button>`
-          uiRequest += ui;
-        })
+          requests.map((request)=>{
+            let ui = `<button type="button" class="btn btn-success" onclick="acceptFriendRequest('${request.from}')">${request.from} Accept</button>`
+            uiRequest += ui;
+          })
 
-        friendRequest.innerHTML = '';
+          friendRequest.innerHTML = '';
 
-        friendRequest.innerHTML += uiRequest;
+          friendRequest.innerHTML += uiRequest;
+        }
+
+        hideLoader()
 
       } else {
         alert(res.error.message);
+        hideLoader()
       }
     }
   );
@@ -186,6 +216,8 @@ function fetchFriendRequestList() {
 
 // function to accept friend request
 function acceptFriendRequest(of) {
+
+  showLoader()
 
   let token = localStorage.getItem("secret-chat-token");
   let id = localStorage.getItem("secret-chat-id");
@@ -206,8 +238,11 @@ function acceptFriendRequest(of) {
       let res = await response.json();
       if (res.code == 200) {
         console.log(res.data);
+        window.location.reload();
+        hideLoader()
       } else {
         alert(res.error.message);
+        hideLoader()
       }
     }
   );
@@ -217,6 +252,9 @@ function acceptFriendRequest(of) {
 
 // function to get chats with particular user
 function renderChat(friendId) {
+
+  showLoader()
+
   console.log("FETCH CHAT OF ID ", friendId);
   let token = localStorage.getItem("secret-chat-token");
   let id = localStorage.getItem("secret-chat-id");
@@ -238,10 +276,13 @@ function renderChat(friendId) {
       let res = await response.json();
       if (res.code == 200) {
         publicKey = res.key;
-        chatContainer.innerHTML = chatMessages(friendId, res.data, id, publicKey);
+        chatContainer.innerHTML = chatMessages(friendId, res.data, id);
         currentChatContainerUserId = friendId;
+        scrollToBotton()
+        hideLoader()
       } else {
         alert("Error fetching current chat messages!!");
+        hideLoader()
       }
     }
   );
@@ -281,6 +322,9 @@ function decryptWithPrivateKey(message){
 
 // socket method to send message
 function sendMessagetoFriend() {
+
+  showLoader()
+
   let id = localStorage.getItem("secret-chat-id");
   let message = document.getElementById("message-input-box").value;
 
@@ -305,6 +349,10 @@ function sendMessagetoFriend() {
   let chatHistory = document.querySelector(".chat-history-messages");
   chatHistory.innerHTML += messageUI;
   console.log("CHAT HISTORY ", chatHistory);
+
+  document.getElementById("message-input-box").value = ""
+
+  hideLoader()
 }
 
 // ################ UI ELEMENTS ###################
@@ -314,7 +362,7 @@ function chatListElement(id) {
   return `
         <li class="clearfix" onclick="renderChat(this.id)" id="${id}">
             <img
-                src="https://bootdey.com/img/Content/avatar/avatar2.png"
+                src="https://image.shutterstock.com/image-vector/african-bearded-man-wearing-tshirt-260nw-1476685571.jpg"
                 alt="avatar"
             />
             <div class="about">
@@ -334,23 +382,28 @@ function chatMessage(id, message) {
 
   if (myId == id) {
     return `<li class="clearfix">
-      <div class="message other-message float-right">
+      <div class="message other-message float-right" style="min-width: 200px">
         ${decryptWithPrivateKey(message)}
       </div>
-    </li>`;
+    </li>`
   } else {
     return `<li class="clearfix">
-      <div class="message my-message">
+      <div class="message my-message" style="min-width: 200px">
       ${decryptWithPrivateKey(message)}
       </div>
-    </li>`;
+    </li>`
   }
 }
 
+function scrollToBotton() {
+  let theElement = document.getElementById('chat-history');
+  theElement.scroll({ top: theElement.scrollHeight, behavior: 'smooth' });
+}
+
 // chatMessages element UI generator
-function chatMessages(friendId, chatMessages, id, publicKey) {
+function chatMessages(friendId, chatMessages, id) {
   return `
-    <div class="chat-header clearfix">
+    <div class="chat-header clearfix" id="chat-header">
       <div class="row">
         <div class="col-lg-6">
           <a
@@ -359,7 +412,7 @@ function chatMessages(friendId, chatMessages, id, publicKey) {
             data-target="#view_info"
           >
             <img
-              src="https://bootdey.com/img/Content/avatar/avatar2.png"
+              src="https://image.shutterstock.com/image-vector/african-bearded-man-wearing-tshirt-260nw-1476685571.jpg"
               alt="avatar"
             />
           </a>
@@ -367,30 +420,29 @@ function chatMessages(friendId, chatMessages, id, publicKey) {
             <h6 class="m-b-0">${friendId}</h6>
           </div>
         </div>
-        <div class="col-lg-6 hidden-sm text-right">
-          <a href="javascript:void(0);" class="btn btn-outline-info"
-            ><i class="fa fa-cogs"></i
-          ></a>
-        </div>
       </div>
     </div>
-    <div class="chat-history">
+    <div class="chat-history" style="min-height: 350px;" id="chat-history">
       <ul class="m-b-0 chat-history-messages">
-        ${chatMessages.map((message) => {
+        ${
+          
+          chatMessages.map((message) => {
           if (message.from == id) {
             return `<li class="clearfix">
-                <div class="message other-message float-right">
+                <div class="message other-message float-right" style="min-width: 200px">
                   ${decryptWithPrivateKey(message.message1)}
                 </div>
-              </li>`;
+              </li>`
           } else {
             return `<li class="clearfix">
-            <div class="message my-message">
+            <div class="message my-message" style="min-width: 200px">
             ${decryptWithPrivateKey(message.message)}
             </div>
-          </li>`;
+          </li>`
           }
-        })}
+        }).join().replace(/,/g," ")
+        
+      }
       </ul>
     </div>`;
 }
