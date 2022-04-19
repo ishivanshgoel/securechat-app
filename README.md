@@ -1,5 +1,6 @@
-# Secret Chat
+# Secure Chat
 This repository contains backend services for End-2-End encrypted chat application.
+- <a href="https://ishivanshgoel.github.io/securechat/">https://ishivanshgoel.github.io/securechat/</a>
 
 ## Overview
 End-to-end encrypted messaging means that the users within that specific chat can only read messages sent between two people. 
@@ -11,27 +12,26 @@ Real-time chat applications have grown tremendously. Most organizations have ado
 ## Technologies Used
 - Node.js
 - MongoDB
-- React-Native
 - Socket.io
 - RSA Algorithm (Public Key Cryptography)
 
 ## RSA Algorithm
 The RSA algorithm is an asymmetric cryptography algorithm; this means that it uses a public key and a private key (i.e two different, mathematically linked keys). As their names suggest, a public key is shared publicly, while a private key is secret and must not be shared with anyone.
 
-<img src="https://github.com/ishivanshgoel/secretChat/blob/master/docs/RSA.PNG">
+<img src="https://github.com/ishivanshgoel/securechat-app/blob/master/docs/RSA.PNG">
 <a href="https://www.educative.io/edpresso/what-is-the-rsa-algorithm">Source</a>
 
 ## HLD
-<img src="https://github.com/ishivanshgoel/secretChat/blob/master/docs/flow%20secret%20chat.PNG">
+<img src="https://github.com/ishivanshgoel/securechat-app/blob/master/docs/flow%20secret%20chat.PNG">
 
 ## Setup
 - Create `.env` file in root directory
 ```
-DB_URI = mongodb+srv://<--- uri ---->?retryWrites=true&w=majority
+DB_URI=mongodb+srv://<--- uri ---->?retryWrites=true&w=majority
 
-TOKEN_KEY = <--- secret key for JWT tokens ---- > 
+TOKEN_KEY=<--- secret key for JWT tokens ---- > 
 
-PORT = <-- PORT number for express server ---->
+PORT=<-- PORT number for express server ---->
 ```
 
 ## LICENCE
