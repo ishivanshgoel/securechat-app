@@ -15,8 +15,10 @@ function socket(server) {
   // socket io
   // map users to socket id's
   // use redis instead
-  let socketId = {};
-  let onlineStatus = {};
+  let cache = {
+    socketId : {},
+    onlineStatus: {}
+  }
 
 
   // check if the user is authorised
@@ -38,20 +40,18 @@ function socket(server) {
     // register userId in active connections
     socket.on("register", (data) => {
       logger.log("Data Received " + data, 0);
-      
-      socketId[data.userId] = socket.id; // socket id of connected user (required for emitting events)
-      onlineStatus[socket.id] = true; // mark user as online
 
-      logger.log("New User Connected.." + socketId, 0);
+      cache.socketId[data.userId] = socket.id; // socket id of connected user (required for emitting events)
+      cache.onlineStatus[socket.id] = true; // mark user as online
     });
 
     // register chat handler events
-    chatHandler(io, socket, socketId, onlineStatus);
+    chatHandler(io, socket, cache);
 
     // remove user from active connections list on disconnect 
     socket.on("disconnect", () => {
       console.log('SOCKET ID ' + socket.id + ' is now offline');
-      onlineStatus[socket.id] = false;
+      cache.onlineStatus[socket.id] = false;
     });
 
   });

@@ -69,6 +69,10 @@ window.onload = function (e) {
     console.log(socket.id); // "G5p5..."
   });
 
+  let id = localStorage.getItem("secret-chat-id");
+
+  socket.emit("register", { userId: id });
+
   // attempt to reconnect
   socket.on("disconnect", () => {
     socket.connect();
