@@ -20,7 +20,6 @@ function chatHandler(io, socket, cache) {
     console.log("Sending to ", receiverId)
     io.to(receiverId).emit("chat:receive", data);
     
-    
   };
 
   // send message event

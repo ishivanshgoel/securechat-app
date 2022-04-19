@@ -137,7 +137,7 @@
         data-bs-toggle="modal"
         data-bs-target="#exampleModal"
       >
-        🔒 Enter Private Key
+        🔒 Enter Key Value Pair
       </button>
     </div>
 
@@ -151,7 +151,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Your Private Key</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Your Key Value Pair</h5>
             <button
               type="button"
               class="btn-close"
@@ -172,6 +172,22 @@
               />
             </div>
           </div>
+          
+          <div class="modal-body">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">🔒</span>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Public Key"
+                aria-label="Public-Key"
+                aria-describedby="basic-addon1"
+                id = "public-key-modal"
+              />
+            </div>
+          </div>
+
+
           <div class="modal-footer">
             <button
               type="button"

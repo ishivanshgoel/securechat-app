@@ -130,11 +130,18 @@ function savePrivateKey() {
   let value = document.getElementById("private-key-modal").value
   console.log("Private Key ", value)
   localStorage.setItem("secret-chat-key", value)
+
+  let value1 = document.getElementById("public-key-modal").value
+  console.log("Public Key ", value1)
+  localStorage.setItem("secret-chat-key-1", value1)
 }
 
 function fetchPrivateKey() {
   let value = localStorage.getItem("secret-chat-key")
   document.getElementById("private-key-modal").value = value
+
+  let value1 = localStorage.getItem("secret-chat-key-1")
+  document.getElementById("public-key-modal").value = value1
 }
 
 // fetch friend request list
