@@ -82,13 +82,14 @@ class Chat {
    * @returns success message and error object otherwise
    */
 
-  static async saveNewMessage(from, to, message) {
+  static async saveNewMessage(from, to, message, message1) {
     try {
       // save to database
       let mess = new Message({
         from: from,
         to: to,
         message: message,
+        message1: message1
       });
 
       await mess.save();

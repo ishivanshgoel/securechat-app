@@ -11,6 +11,7 @@ const messageSchema = new Schema({
   from: { type: String, required: true },
   to: { type: String, required: true },
   message: { type: String, required: true },
+  message1: { type: String, required: true }
 });
 
 module.exports = mongoose.model("Message", messageSchema);

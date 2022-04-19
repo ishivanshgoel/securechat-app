@@ -9,7 +9,7 @@ function chatHandler(io, socket, socketId, onlineStatus) {
     console.log(`From: ${data.from} To ${data.to} Message ${data.message}`);
 
     // save to database (async)
-    chatController.saveNewMessage(data.from, data.to, data.message);
+    chatController.saveNewMessage(data.from, data.to, data.message, data.message1);
 
     let receiverId = socketId[data.to]; // get socket id of receiver
 

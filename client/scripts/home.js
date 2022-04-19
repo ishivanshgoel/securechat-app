@@ -238,7 +238,7 @@ function renderChat(friendId) {
 
 // encrypting chat message
 function encryptWithPublicKey(friendPublicKey, message) {
-  // Encrypt with the public key...
+  // Encrypt with the public key of friend
   friendPublicKey = friendPublicKey.key
   console.log("Public Key ", friendPublicKey)
   console.log("Message ", message)
@@ -246,13 +246,21 @@ function encryptWithPublicKey(friendPublicKey, message) {
   encrypt.setPublicKey(friendPublicKey);
   let encrypted = encrypt.encrypt(message);
   console.log('Ecrypted ', encrypted);
-  return encrypted;
+
+  // encrypt with your public key for your reference
+  let encrypt1 = new JSEncrypt();
+  let myPublicKey = localStorage.getItem("secret-chat-key-1");
+  encrypt1.setPublicKey(myPublicKey);
+  let encrypted1 = encrypt1.encrypt(message);
+  console.log('Ecrypted for our reference ', encrypted1);
+
+  return [encrypted, encrypted1];
 }
 
 // decrypt chat message
 function decryptWithPrivateKey(message){
   let decrypt = new JSEncrypt();
-  let privateKey = localStorage.getItem("secret-chat-key"); // TODO: convert to JSON
+  let privateKey = localStorage.getItem("secret-chat-key");
   console.log("Private Key ", privateKey);
   decrypt.setPrivateKey(privateKey);
   let uncrypted = decrypt.decrypt(message);
@@ -265,11 +273,13 @@ function sendMessagetoFriend() {
   let id = localStorage.getItem("secret-chat-id");
   let message = document.getElementById("message-input-box").value;
 
+  let messages = encryptWithPublicKey(publicKey, message)
   // emit a socket event
   let data = {
     from: id,
     to: currentChatContainerUserId,
-    message: encryptWithPublicKey(publicKey, message), // TODO: send encrypted message
+    message: messages[0],
+    message1: messages[1] 
   };
 
   console.log("Message ", message);
@@ -277,7 +287,7 @@ function sendMessagetoFriend() {
   socket.emit("chat:send", data);
 
   // append message to UI
-  let messageUI = chatMessage(id, message);
+  let messageUI = chatMessage(id, data.message1);
 
   console.log("Message UI", messageUI);
 
@@ -307,16 +317,20 @@ function chatListElement(id) {
 function chatMessage(id, message) {
   let myId = localStorage.getItem("secret-chat-id");
 
+  console.log("ID ", id);
+  console.log("My ID ", myId);
+  console.log("Message ", message);
+
   if (myId == id) {
     return `<li class="clearfix">
       <div class="message other-message float-right">
-        ${message}
+        ${decryptWithPrivateKey(message)}
       </div>
     </li>`;
   } else {
     return `<li class="clearfix">
       <div class="message my-message">
-      ${message}
+      ${decryptWithPrivateKey(message)}
       </div>
     </li>`;
   }
@@ -355,7 +369,7 @@ function chatMessages(friendId, chatMessages, id, publicKey) {
           if (message.from == id) {
             return `<li class="clearfix">
                 <div class="message other-message float-right">
-                  ${decryptWithPrivateKey(message.message)}
+                  ${decryptWithPrivateKey(message.message1)}
                 </div>
               </li>`;
           } else {
